@@ -1,25 +1,14 @@
 #pragma once
 #include<vector>
-
-#include"Frame.h"
+#include<memory>
+#include<SFML\Graphics.hpp>
 
 class File
 {
-	std::vector<std::unique_ptr<Frame>> frames_;
 	std::shared_ptr<sf::Texture> texture_;
-	Frame* currentFrame_;
 public:
-	File(std::shared_ptr<sf::Texture> file);
+	File();
 	~File();
-
-	void update();
-	void render();
-
-	void setFrame(Frame& frame);
-	Frame& getFrame();
-
-	void split(int cellw, int cellh);
-
-	decltype(frames_)& getFrames();
-	sf::Texture& getTexture();
+	void load(std::shared_ptr<sf::Texture> texture);
+	decltype(*texture_)& getTexture();
 };

@@ -3,28 +3,7 @@
 #include "ImportWindow.h"
 #include "ComponentManager.h"
 #include "Application.h"
-
-void KeySet::update() {
-	for (auto it = keys_.begin(); it < keys_.end() - 1; ++it) {
-		if (KeyboardManager::get().getKeyState(*it) != KeyStates::Press && KeyboardManager::get().getKeyState(*it) != KeyStates::Pressed) {
-			return;
-		}
-	}
-	printf("all keys in press\n");
-	if (KeyboardManager::get().getKeyState(*(keys_.end() - 1)) == KeyStates::Pressed) {
-		callback_();
-	}
-}
-
-KeySet::KeySet(std::initializer_list<sf::Keyboard::Key>&& keyset,
-	std::function<void()>&& callback, KeyStates&& eType) {
-	keys_.assign(keyset);
-	callback_ = std::move(callback);
-	eType_ = std::move(eType);
-}
-
-KeySet::~KeySet() {
-}
+#include "KeySet.h"
 
 KeyboardHandler* KeyboardHandler::keyboardHandler = nullptr;
 
@@ -38,21 +17,22 @@ KeyboardHandler::KeyboardHandler()
 		ComponentManager::get().add<ImportWindow>("generic2.png");
 	});
 
+	auto& workspaceManager = Application::get().getWorkspaceManager();
 	addKeySet({
 		sf::Keyboard::LControl,
 		sf::Keyboard::Add
-	}, []() {
-		if (Application::get().getAllWorkspaces().size() > 0) {
-			Application::get().getWorkspace().getView().zoom(0.25);
+	}, [&workspaceManager]() {
+		if (workspaceManager.getAllWorkspaces().size() > 0) {
+			workspaceManager.getWorkspace().getView().zoom(0.25);
 		}
 	});
 
 	addKeySet({
 		sf::Keyboard::LControl,
 		sf::Keyboard::Subtract
-	}, []() {
-		if (Application::get().getAllWorkspaces().size() > 0) {
-			Application::get().getWorkspace().getView().zoom(-0.25);
+	}, [&workspaceManager]() {
+		if (workspaceManager.getAllWorkspaces().size() > 0) {
+			workspaceManager.getWorkspace().getView().zoom(-0.25);
 		}
 	});
 }

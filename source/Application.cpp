@@ -10,6 +10,10 @@
 
 Application* Application::application_ = nullptr;
 
+decltype(Application::workspaceManager_)& Application::getWorkspaceManager() {
+	return workspaceManager_;
+}
+
 Application& Application::get() {
 	if (!application_)
 		application_ = new Application();
@@ -26,38 +30,16 @@ Application::~Application()
 {
 }
 
-Workspace& Application::createWorkspace(std::string name) {
-	printf("beggining workspace c\n");
-	Workspace* workspace = new Workspace();
-	printf("bce\n");
-	workspaces_.insert(workspaces_.end(), { name, std::unique_ptr<Workspace>(workspace) });
-	return *workspace;
-}
-
 sf::Event& Application::getEvent() {
 	return wevent_;
-}
-
-void Application::setWorkspace(Workspace& workspace) {
-	printf("bce\n");
-	currentWorkspace_ = &workspace;
-	printf("bce\n");
 }
 
 void Application::loadData() {
 	ShaderManager::get().addShader("shImport", "import.vert", "import.frag");
 }
 
-Workspace& Application::getWorkspace() {
-	return *currentWorkspace_;
-}
-
 sf::RenderWindow& Application::getWindow() {
 	return *window;
-}
-
-decltype(Application::workspaces_)& Application::getAllWorkspaces() {
-	return workspaces_;
 }
 
 void Application::run(size_t fps) {
@@ -69,20 +51,19 @@ void Application::run(size_t fps) {
 		sf::Event& wevent = wevent_;
 		wevent = sf::Event();
 		getWindow().pollEvent(wevent);
-		//quit = wevent.type == sf::Event::EventType::Closed;
 		ImGui::SFML::ProcessEvent(wevent);
 		ImGui::SFML::Update(getWindow(), deltaClock.restart());
 		getWindow().clear(sf::Color(245, 245, 245, 255));
-		auto& workspaces = getAllWorkspaces();
+		auto& workspaces = getWorkspaceManager().getAllWorkspaces();
 		ImGui::Begin("Workspaces");
 		auto counter = 0u;
 		if (workspaces.size() > 0) {
-			getWindow().setView(getWorkspace().getView());
+			getWindow().setView(getWorkspaceManager().getWorkspace().getView());
 		}
 		for (auto& i : workspaces) {
 			ImGui::PushID(counter);
 			if (ImGui::Button(i.first.c_str())) {
-				setWorkspace(*i.second);
+				getWorkspaceManager().setWorkspace(*i.second);
 			}
 			ImGui::PopID();
 			ImGui::SameLine();
@@ -90,9 +71,9 @@ void Application::run(size_t fps) {
 		}
 		ImGui::End();
 		printf("bcex\n");
-		if (getAllWorkspaces().size() > 0) {
-			getWorkspace().update();
-			getWorkspace().render();
+		if (getWorkspaceManager().getAllWorkspaces().size() > 0) {
+			getWorkspaceManager().getWorkspace().update();
+			getWorkspaceManager().getWorkspace().render();
 		}
 		printf("bcex\n");
 		KeyboardManager::get().update();

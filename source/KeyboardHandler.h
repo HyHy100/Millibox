@@ -1,24 +1,13 @@
 #pragma once
-#include "Component.h"
 #include<map>
 #include<functional>
 #include<array>
 #include<SFML\Window.hpp>
 #include<memory>
 #include<initializer_list>
+#include "Component.h"
 #include"KeyboardManager.h"
-
-class KeySet {
-	std::vector<sf::Keyboard::Key> keys_;
-	std::function<void()> callback_;
-	KeyStates eType_;
-public:
-	KeySet(std::initializer_list<sf::Keyboard::Key>&& keyset,
-		std::function<void()>&& callback,
-		KeyStates&& eType);
-	~KeySet();
-	void update();
-};
+#include"KeySet.h"
 
 class KeyboardHandler
 {

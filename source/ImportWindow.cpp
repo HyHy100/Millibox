@@ -42,10 +42,12 @@ void ImportWindow::update() {
 	static int i = 0;
 	i++;
 	if (ImGui::Button("OK!")) {
-		auto& workspace = Application::get().createWorkspace("Workspace " + std::to_string(i));
-		Application::get().setWorkspace(workspace);
-		Application::get().getWorkspace().loadFile(content_);
-		workspace.getFile().split(frameSize_.x, frameSize_.y);
+		auto& workspace = Application::get().getWorkspaceManager().createWorkspace("Workspace " + std::to_string(i));
+		Application::get().getWorkspaceManager().setWorkspace(workspace);
+		Application::get().getWorkspaceManager().getWorkspace().getFile().load(content_);
+		workspace.setCurrentAnimation(
+			workspace.getAnimationList().addAnimation("", workspace.getFile(), 0, 4, frameSize_.x, frameSize_.y)
+		);
 		ComponentManager::get().removeByTag(Tags::WINDOW_IMAGE_IMPORT);
 	}
 	ImGui::End();

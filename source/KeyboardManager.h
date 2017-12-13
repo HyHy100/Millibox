@@ -2,11 +2,7 @@
 #include<vector>
 #include<SFML\Window.hpp>
 #include<array>
-
-enum KeyStates
-{
-	Released, Release, Pressed, Press
-};
+#include"KeyStates.h"
 
 class KeyboardManager
 {
@@ -14,10 +10,7 @@ class KeyboardManager
 	std::array<KeyStates, sf::Keyboard::KeyCount> _KeyM;
 public:
 	static decltype(*keyboardManager_)& get();
-
 	KeyStates getKeyState(const sf::Keyboard::Key key) const;
-
 	KeyboardManager();
-
 	void update();
 };

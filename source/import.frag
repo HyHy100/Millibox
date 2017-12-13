@@ -1,5 +1,6 @@
 ﻿uniform sampler2D texture;
 uniform vec2 frameSize;
+uniform vec2 range;
 
 void main()
 {

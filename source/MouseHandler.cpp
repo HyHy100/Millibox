@@ -22,9 +22,9 @@ MouseHandler::~MouseHandler()
 
 void MouseHandler::update() {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle)) {
-		auto& workspaces = Application::get().getAllWorkspaces();
+		auto& workspaces = Application::get().getWorkspaceManager().getAllWorkspaces();
 		if (workspaces.size() > 0) {
-			Application::get().getWorkspace().getView().move(
+			Application::get().getWorkspaceManager().getWorkspace().getView().move(
 				std::move(sf::Vector2f(prevMousePos_.x - sf::Mouse::getPosition().x,
 					prevMousePos_.y - sf::Mouse::getPosition().y))
 			);
